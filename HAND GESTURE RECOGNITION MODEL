@@ -1,0 +1,26 @@
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+# Define the CNN model architecture
+model = models.Sequential([
+    layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu', input_shape=(64, 64, 3)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(num_classes, activation='softmax')  # num_classes is the number of hand gestures to classify
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+
+# Evaluate the model
+test_loss, test_accuracy = model.evaluate(X_test, y_test)
+print(f'Test accuracy: {test_accuracy}')
+
+# Save the model for deployment
+model.save('hand_gesture_recognition_model.h5')
